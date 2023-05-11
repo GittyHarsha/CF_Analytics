@@ -351,29 +351,6 @@
         <script src="node_modules/chart.js/dist/chart.umd.js"></script>
         <script src="script.js"></script>
 
-  <script>
-    const handle = 'tourist';
-    const unsolvedQuestionsElement = document.getElementById('unsolved-questions');
-
-    const updateUnsolvedList = (handle) => {
-      fetch(`https://codeforces.com/api/user.status?handle=${handle}`)
-        .then(response => response.json())
-        .then(data => {
-          const unsolvedSubmissions = data.result.filter(submission => submission.verdict === 'FAILED' || submission.verdict === 'TIME_LIMIT_EXCEEDED');
-          const unsolvedProblems = new Set();
-          unsolvedSubmissions.forEach(submission => unsolvedProblems.add(submission.problem.contestId + submission.problem.index));
-          const unsolvedList = Array.from(unsolvedProblems).sort();
-
-          const unsolvedString = unsolvedList.join(', ');
-
-          unsolvedQuestionsElement.innerText = unsolvedString;
-        })
-        .catch(error => console.error(error));
-    };
-
-    updateUnsolvedList(handle);
-  </script>
-
 </body>
 
 </html>

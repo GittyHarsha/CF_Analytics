@@ -266,3 +266,26 @@ let handle1 = params.handle; // "some_value"
 
     })
     .catch(error => console.error(error));
+
+
+    //unsolved questions
+
+    
+    const unsolvedQuestionsElement = document.getElementById('unsolved-questions');
+
+   
+      fetch(api_url)
+      .then(response => response.json())
+
+
+        .then(data => {
+          const unsolvedSubmissions = data.result.filter(submission => submission.verdict === 'FAILED' || submission.verdict === 'TIME_LIMIT_EXCEEDED');
+          const unsolvedProblems = new Set();
+          unsolvedSubmissions.forEach(submission => unsolvedProblems.add(submission.problem.contestId + submission.problem.index));
+          const unsolvedList = Array.from(unsolvedProblems).sort();
+
+          const unsolvedString = unsolvedList.join(', ');
+
+          unsolvedQuestionsElement.innerText = unsolvedString;
+        })
+        .catch(error => console.error(error));
