@@ -5,4 +5,15 @@ console.log(handle);
 
 window.location.href = "/home.html?handle="+handle;
 
+
 }
+
+window.addEventListener('keydown', 
+function(event) {
+    if(event.key =="Enter") {
+        event.preventDefault();
+        getHandle();
+        console.log("Enter");
+    }
+}
+);
