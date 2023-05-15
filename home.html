@@ -258,18 +258,18 @@
                                 <th>Average Attempts</th>
                                 <th id="average-value"></th>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th>Max Attempts</th>
                                 <th id="max-value"></th>
-                            </tr>
+                            </tr> -->
                             <tr>
                                 <th>Solved with one submission</th>
                                 <th id="once-value"></th>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th>MAX AC(s)</th>
                                 <th id="faltu-value"></th>
-                            </tr>
+                            </tr> -->
                         </thead>
                         <tbody>
 
@@ -340,26 +340,28 @@
                     </div>
                 </div>
             </div>-->
-        <div class="container border shadow" style="background-color: white;">
-            <h5 class="my-3" style="color:blue"><u>Codeforces Unsolved Questions</u></h5>
-            <div class="my-5">
-                <p id="unsolved-questions"></p>
-            </div>
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-sm-12 mt-3 mb-5% mb-sm-5 mx-auto">
-            <div class="card" style="border:#a7a2a27a 2px solid;height:55vh;width:60vw;">
-                <div class="card-body">
-                    <h5 class="card-title" style="color: black;text-align: center;text-decoration: underline;">
-                        Submissions heat map of user
-                    </h5>
-
+            <div class="container border shadow" style="background-color: white;">
+                <h5 class="my-3" style="color:black"><u>Codeforces Unsolved Questions</u></h5>
+                <div class="my-5">
+                  <p id="unsolved-questions"></p>
                 </div>
+              </div>
+
+        </div>
+        <div class="container">
+        <div class="row">
+            <div class="col-sm-12 mt-3 mb-5% mb-sm-5 mx-auto">
+                <div class="card" style="border:#a7a2a27a 2px solid;;height:55vh;width:60vw;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: black;text-align: center;text-decoration: underline;">Submissions heat map of user
+                        </h5>
+
+                        <iframe src="heatmap.html" style="border: #8e1c1c7a 2px solid; width: 100%; height: 300px;"></iframe>
+
+                    </div>
+                 </div>
             </div>
         </div>
-
     </div>
     </div>
     <!-- Optional JavaScript -->
@@ -373,56 +375,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-    <script src="node_modules/chart.js/dist/chart.umd.js"></script>
-    
-    
-    <!-- <script>
-        fetch('index.html') // Replace 'otherFile.html' with the actual file path
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const usernameElement = document.getElementById("username");
-
-                usernameElement.textContent = (document.getElementById('input-handle')).value; // Replace 'elementId' with the ID of the element you want to find
-                console.log(usernameElement.textContent);
-            })
-
-            .catch(error => {
-                console.error('Error fetching HTML file:', error);
-            });
-
-
-    </script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
-        integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
-    
-    <script src="script.js"></script>
-    <script src="script1.js"></script>
-    <script>
-        const handle = 'tourist';
-        const unsolvedQuestionsElement = document.getElementById('unsolved-questions');
-
-        const updateUnsolvedList = (handle) => {
-            fetch(`https://codeforces.com/api/user.status?handle=${handle}`)
-                .then(response => response.json())
-                .then(data => {
-                    const unsolvedSubmissions = data.result.filter(submission => submission.verdict === 'FAILED' || submission.verdict === 'TIME_LIMIT_EXCEEDED');
-                    const unsolvedProblems = new Set();
-                    unsolvedSubmissions.forEach(submission => unsolvedProblems.add(submission.problem.contestId + submission.problem.index));
-                    const unsolvedList = Array.from(unsolvedProblems).sort();
-
-                    const unsolvedString = unsolvedList.join(', ');
-
-                    unsolvedQuestionsElement.innerText = unsolvedString;
-                })
-                .catch(error => console.error(error));
-        };
-
-        updateUnsolvedList(handle);
-    </script>
+        <script src="node_modules/chart.js/dist/chart.umd.js"></script>
+        <script src="script.js"></script>
 
 </body>
 

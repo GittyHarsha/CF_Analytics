@@ -118,28 +118,36 @@ fetch(api_url)
   .then(response => response.json())
   .then(data => {
 
-    const tags = {};
-    const language = {};
-    const verdicts = {};
-    const ratings = {};
-    const accepted = new Set();
-    const tried = new Set();
-    // Levels of the user
-    let problem_count = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0,
-      E: 0,
-      F: 0,
-    };
-    var total = 0;
-    for (let submission of data.result) {
-      total = total + 1;
+        const tags = {};
+        const language = {};
+        const verdicts = {};
+        const ratings = {};
+        const accepted = new Set();
+        const tried = new Set();
+  
+        const problem_counted = {};
+        // Levels of the user
+        let problem_count = {
+          A: 0,
+          B: 0,
+          C: 0,
+          D: 0,
+          E: 0,
+          F: 0,
+        };
+        var total = 0;
+        for (let submission of data.result) {
+          total = total+1;
 
       tried.add(submission.problem.contestId + '-' + submission.problem.index);
 
-      if (submission.verdict === 'OK') {
+          const ques = submission.problem.contestId + '-' + submission.problem.index;
+          if(problem_counted[ques])
+            problem_counted[ques]++;
+          else
+            problem_counted[ques] = 1;
+
+          if (submission.verdict === 'OK') {
 
         accepted.add(submission.problem.contestId + '-' + submission.problem.index);
         //Tags of the user
@@ -176,51 +184,52 @@ fetch(api_url)
         verdicts[vr] = 1;
 
 
-
-    }
-
-
-    let labels = Object.keys(problem_count);
-    let bata = Object.values(problem_count);
-
-    let ctx = document.getElementById('level-chart').getContext('2d');
-
-    let Levelchart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Problems Solved',
-          data: bata,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
+        
         }
-      }
-    });
+
+        
+        
+        let labels = Object.keys(problem_count);
+        let bata = Object.values(problem_count);
+        
+        let ctx = document.getElementById('level-chart').getContext('2d');
+        
+        let Levelchart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Problems Solved',
+              data: bata,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
 
     //Tags of the user
 
@@ -299,6 +308,14 @@ fetch(api_url)
       }
     });
 
+        //question solved with one attempt
+        let once = 0;
+        for(let ques of accepted){
+          if(problem_counted[ques]==1)
+            once++;
+        }
+        document.getElementById('once-value').textContent = once + '(' + ((once/accepted.size)*100).toFixed(2) + '%)';
+
 
     const solved = accepted.size;
     const countElement = document.getElementById('solved-value');
@@ -314,31 +331,69 @@ fetch(api_url)
   })
   .catch(error => console.error(error));
 
-const api_url1 = 'https://codeforces.com/api/user.rating?handle=' + handle1;
-fetch(api_url1)
-  .then(response => response.json())
-  .then(data => {
+    const api_url1 = 'https://codeforces.com/api/user.rating?handle='+handle1;
+    fetch(api_url1)
+    .then(response => response.json())
+    .then(data => {
+    
+      var maxRatingUp = 0;
+      var maxRatingDown = 0;
+      var contests = 0;
+      var minRank = 100000,maxRank = -1;
+      for(let RatingChange of data.result){
+        contests++;
+        maxRatingUp = Math.max(maxRatingUp,Math.max(RatingChange.newRating-RatingChange.oldRating,0));
+        maxRatingDown = Math.max(maxRatingDown,Math.max(0,RatingChange.oldRating-RatingChange.newRating));
+        maxRank = Math.max(maxRank,RatingChange.rank);
+        minRank = Math.min(minRank,RatingChange.rank);
+      }
 
-    var maxRatingUp = 0;
-    var maxRatingDown = 0;
-    var contests = 0;
-    for (let RatingChange of data.result) {
-      contests++;
-      maxRatingUp = Math.max(maxRatingUp, Math.max(RatingChange.newRating - RatingChange.oldRating, 0));
-      maxRatingDown = Math.max(maxRatingDown, Math.max(0, RatingChange.oldRating - RatingChange.newRating));
-    }
-    console.log(maxRatingUp);
+      const maxup = document.getElementById('chadai-value');
+      if(maxRatingUp!=0)
+        maxup.textContent = maxRatingUp;
+      else
+        maxup.textContent = '---';
 
-    const maxup = document.getElementById('chadai-value');
-    maxup.textContent = maxRatingUp;
-
-    const maxdown = document.getElementById('girna-value');
-    maxdown.textContent = -maxRatingDown;
+      const maxdown = document.getElementById('girna-value');
+      if(maxRatingDown!=0)
+        maxdown.textContent = -maxRatingDown;
+      else
+        maxdown.textContent = '---';
 
     document.getElementById('contest-value').textContent = contests;
 
-    // if(contests==0)
-
+      if(contests==0){
+        document.getElementById('best-value').textContent = '---';
+        document.getElementById('worst-value').textContent = '---';
+      }
+      else
+      {
+        document.getElementById('best-value').textContent = minRank;
+        document.getElementById('worst-value').textContent = maxRank;
+      }
 
   })
   .catch(error => console.error(error));
+
+
+    //unsolved questions
+
+    
+    const unsolvedQuestionsElement = document.getElementById('unsolved-questions');
+
+   
+      fetch(api_url)
+      .then(response => response.json())
+
+
+        .then(data => {
+          const unsolvedSubmissions = data.result.filter(submission => submission.verdict === 'FAILED' || submission.verdict === 'TIME_LIMIT_EXCEEDED');
+          const unsolvedProblems = new Set();
+          unsolvedSubmissions.forEach(submission => unsolvedProblems.add(submission.problem.contestId + submission.problem.index));
+          const unsolvedList = Array.from(unsolvedProblems).sort();
+
+          const unsolvedString = unsolvedList.join(', ');
+
+          unsolvedQuestionsElement.innerText = unsolvedString;
+        })
+        .catch(error => console.error(error));
