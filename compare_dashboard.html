@@ -1,8 +1,8 @@
- <!doctype html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <script src="index_script.js"></script>
+    <!-- <script src="index_script.js"></script> -->
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -130,12 +130,31 @@
         </h5>
         <div class="card-body">
             <form>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="input-handle">
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="person1" name="person1" id="input-handle1">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="person2" name="person2" id="input-handle2">
+                    </div>
                 </div>
             </form>
             <div class="d-flex justify-content-center">
-                <button class="button button1" onclick="getHandle()">Submit</button>
+                <button class="button button1" onclick="getHandles()">Compare</button>
+                <script>
+                    
+                    const getHandles = () => {
+
+                        const handle1 = document.getElementById('input-handle1').value;
+                        console.log(handle1);
+                        const handle2 = document.getElementById('input-handle2').value;
+                        console.log(handle2);
+                        window.location.href = "/compare.html?handle=" + handle1 + handle2;
+
+
+                    }
+                
+                </script>
             </div>
         </div>
     </div>
